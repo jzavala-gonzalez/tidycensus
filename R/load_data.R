@@ -714,6 +714,14 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
   base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
                   year, survey)
 
+  if ( "72" %in% purrr::map_chr(unique(state), function (x) {suppressMessages(validate_state(x))}) ) {
+    if (length(unique(state)) > 1) {
+      stop("If querying Puerto Rico (072), can only query this one 'state' at a time.", call. = FALSE)
+    }
+    message("Using pumspr API base url for Puerto Rico query")
+    base <- paste0(base, 'pr')
+  }
+
 
   if (!is.null(puma)) {
 
@@ -995,6 +1003,14 @@ load_data_pums_vacant <- function(variables, state, puma, key, year, survey,
 
   base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
                   year, survey)
+
+  if ( "72" %in% purrr::map_chr(unique(state), function (x) {suppressMessages(validate_state(x))}) ) {
+    if (length(unique(state)) > 1) {
+      stop("If querying Puerto Rico (072), can only query this one 'state' at a time.", call. = FALSE)
+    }
+    message("Using pumspr API base url for Puerto Rico query")
+    base <- paste0(base, 'pr')
+  }
 
   # Parse the variables for housing vs. person variables
   housing_catalog <- pums_variables %>%
